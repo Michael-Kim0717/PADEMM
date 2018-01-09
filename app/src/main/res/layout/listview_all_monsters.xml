@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/addMonsterButton"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_x="315dp"
+        android:layout_y="38dp"
+        android:text="+"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/monsterID"
+        android:layout_width="50dp"
+        android:layout_height="wrap_content"
+        android:layout_x="101dp"
+        android:layout_y="44dp"
+        android:text="TextView"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/monsterName"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_x="152dp"
+        android:layout_y="35dp"
+        android:gravity="center"
+        android:text="TextView"
+        android:textAlignment="center" />
+
+    <ImageView
+        android:id="@+id/monsterImage"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_x="27dp"
+        android:layout_y="32dp"
+        app:srcCompat="@mipmap/ic_launcher" />
+</AbsoluteLayout>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/monsterImage"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
+    <ImageView
+        android:id="@+id/evoMat3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/monsterImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp"
+        android:layout_marginRight="30dp"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoMat2"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        app:srcCompat="@android:drawable/btn_star_big_on"
+        android:layout_alignTop="@+id/evoMat3"
+        android:layout_toLeftOf="@+id/evoMat3"
+        android:layout_toStartOf="@+id/evoMat3"
+        android:layout_marginRight="30dp" />
+
+    <ImageView
+        android:id="@+id/evoMat4"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/evoMat3"
+        android:layout_toEndOf="@+id/evoMat3"
+        android:layout_toRightOf="@+id/evoMat3"
+        android:layout_marginRight="30dp"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoMat1"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/evoMat2"
+        android:layout_marginRight="30dp"
+        android:layout_toLeftOf="@+id/evoMat2"
+        android:layout_toStartOf="@+id/evoMat2"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoMat5"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignTop="@+id/evoMat4"
+        android:layout_toEndOf="@+id/evoMat4"
+        android:layout_toRightOf="@+id/evoMat4"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <TextView
+        android:id="@+id/priorityText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="Priority :"
+        android:layout_below="@+id/evoMat2"
+        android:layout_alignLeft="@+id/evoMat2"
+        android:layout_alignStart="@+id/evoMat2" />
+
+    <Spinner
+        android:id="@+id/prioritySpinner"
+        android:layout_width="100dp"
+        android:layout_height="20dp"
+        android:layout_above="@+id/preferredEvoText"
+        android:layout_toEndOf="@+id/evoMat2"
+        android:layout_toRightOf="@+id/evoMat2" />
+
+    <TextView
+        android:id="@+id/preferredEvoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/priorityText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:text="Preferred Evolution :" />
+
+    <ImageView
+        android:id="@+id/evoChoice4"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignTop="@+id/evoChoice5"
+        android:layout_marginRight="20dp"
+        android:layout_toLeftOf="@+id/evoChoice5"
+        android:layout_toStartOf="@+id/evoChoice5"
+        android:alpha="0.6"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoChoice5"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignLeft="@+id/evoChoice2"
+        android:layout_alignStart="@+id/evoChoice2"
+        android:layout_below="@+id/evoChoice2"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:alpha="0.6"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoChoice2"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignTop="@+id/evoChoice1"
+        android:layout_toEndOf="@+id/evoChoice1"
+        android:layout_toRightOf="@+id/evoChoice1"
+        android:alpha="0.6"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoChoice3"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignTop="@+id/evoChoice2"
+        android:layout_toEndOf="@+id/evoChoice5"
+        android:layout_toRightOf="@+id/evoChoice5"
+        android:alpha="0.6"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoChoice1"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_below="@+id/preferredEvoText"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="22dp"
+        android:layout_toLeftOf="@+id/monsterImage"
+        android:layout_toStartOf="@+id/monsterImage"
+        android:alpha="0.6"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <ImageView
+        android:id="@+id/evoChoice6"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignTop="@+id/evoChoice5"
+        android:layout_toEndOf="@+id/evoChoice5"
+        android:layout_toRightOf="@+id/evoChoice5"
+        android:alpha="0.6"
+        app:srcCompat="@android:drawable/btn_star_big_on" />
+
+    <Button
+        android:id="@+id/saveDetails"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="30dp"
+        android:text="save" />
+</RelativeLayout>
