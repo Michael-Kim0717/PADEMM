@@ -82,7 +82,8 @@ public class addMonsterScreen extends AppCompatActivity{
                         // Grab every single monster in the JSON array.
                         jsonArray = new JSONArray(JSON_STRING);
                         int jsonCount = 0;
-                        String imageLink, monsterID, monsterName;
+                        String monsterElement, imageLink, monsterID, monsterName;
+                        ArrayList<String> evoOptions, evoMaterials;
 
                         while (jsonCount < jsonArray.length()) {
                             JSONObject JO = jsonArray.getJSONObject(jsonCount);
@@ -96,8 +97,9 @@ public class addMonsterScreen extends AppCompatActivity{
                                     imageLink = "https://www.padherder.com" + JO.getString("image60_href");
                                     monsterID = JO.getString("id");
                                     monsterName = JO.getString("name");
+                                    monsterElement = JO.getString("element");
 
-                                    monsterBase monsterBase = new monsterBase(imageLink, monsterID, monsterName, "?", "1");
+                                    monsterBase monsterBase = new monsterBase(imageLink, monsterID, monsterName, "?", "1", monsterElement, "", "");
                                     allMonsters.add(monsterBase);
                                 }
                                 monsterListAdapter.notifyDataSetChanged();
@@ -106,12 +108,13 @@ public class addMonsterScreen extends AppCompatActivity{
                             catch (Exception e){
                                 int searchValueLength = searchValue.length();
                                 String searchToLower = JO.getString("name").toLowerCase();
-                                if (searchToLower.contains(searchValue) && !JO.getString("type").equals("0")) {
+                                if (searchToLower.contains(searchValue) && !JO.getString("type").equals("0") && !JO.getString("type").equals("12") && !JO.getString("type").equals("13")) {
                                     imageLink = "https://www.padherder.com" + JO.getString("image60_href");
                                     monsterID = JO.getString("id");
                                     monsterName = JO.getString("name");
+                                    monsterElement = findElement(JO.getInt("element"));
 
-                                    monsterBase monsterBase = new monsterBase(imageLink, monsterID, monsterName, "?", "1");
+                                    monsterBase monsterBase = new monsterBase(imageLink, monsterID, monsterName, "?", "1", monsterElement, "", "");
                                     allMonsters.add(monsterBase);
                                 }
                                 monsterListAdapter.notifyDataSetChanged();
@@ -205,7 +208,7 @@ public class addMonsterScreen extends AppCompatActivity{
                 public void onClick(View view) {
                     monsterBoxDBHelper = new monsterBoxDBHelper(getBaseContext());
                     sqLiteDatabase = monsterBoxDBHelper.getWritableDatabase();
-                    monsterBoxDBHelper.addMonsterToBox(allMonsters.get(i).imageLink, allMonsters.get(i).monsterID, allMonsters.get(i).monsterName, "?", "1", sqLiteDatabase);
+                    monsterBoxDBHelper.addMonsterToBox(allMonsters.get(i).imageLink, allMonsters.get(i).monsterID, allMonsters.get(i).monsterName, "?", "1", allMonsters.get(i).monsterElement, "", "", sqLiteDatabase);
                     Toast.makeText(getBaseContext(), "Monster Added.", Toast.LENGTH_SHORT).show();
                     sqLiteDatabase.close();
                 }
@@ -217,5 +220,21 @@ public class addMonsterScreen extends AppCompatActivity{
 
             return view;
         }
+    }
+
+    private String findElement(int eleNumber) {
+        switch(eleNumber) {
+            case 0 :
+                return "Fire";
+            case 1 :
+                return "Water";
+            case 2 :
+                return "Wood";
+            case 3 :
+                return "Light";
+            default :
+                return "Dark";
+        }
+
     }
 }

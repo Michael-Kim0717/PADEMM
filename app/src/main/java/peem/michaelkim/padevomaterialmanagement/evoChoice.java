@@ -16,20 +16,4 @@ public class evoChoice {
         this.evoMaterials = evoMaterials;
     }
 
-    public String getEvoMonster() {
-        return evoMonster;
-    }
-
-    public void setEvoMonster(String evoMonster) {
-        this.evoMonster = evoMonster;
-    }
-
-    public ArrayList<String> getEvoMaterials() {
-        return evoMaterials;
-    }
-
-    public void setEvoMaterials(ArrayList<String> evoMaterials) {
-        this.evoMaterials = evoMaterials;
-    }
-
 }

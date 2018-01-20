@@ -452,7 +452,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 else if (eC6){
                     evoChoice = listOfChoiceLinks.get(5);
                 }
-                int count = monsterBoxDBHelper.updateMonster(getIntent().getStringExtra("Link"), getIntent().getStringExtra("Name"), getIntent().getStringExtra("ID"), evoChoice, prioritySpinner.getSelectedItem().toString().trim(), sqLiteDatabase);
+                int count = monsterBoxDBHelper.updateMonster(getIntent().getStringExtra("Link"), getIntent().getStringExtra("Name"), getIntent().getStringExtra("ID"), evoChoice, prioritySpinner.getSelectedItem().toString().trim(), "", "", "", sqLiteDatabase);
                 Toast.makeText(getApplicationContext(), count + " contact updated.", Toast.LENGTH_LONG).show();
                 finish();
             }
