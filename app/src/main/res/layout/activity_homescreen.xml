@@ -22,12 +22,6 @@
         android:layout_weight="1"
         android:padding="15dp">
 
-        <Button
-            android:id="@+id/testButton"
-            android:layout_width="119dp"
-            android:layout_height="41dp"
-            android:text="Button" />
-
         <ListView
             android:id="@+id/evoMatList"
             android:layout_width="0dp"
@@ -41,5 +35,14 @@
             android:layout_weight=".5" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/testButton"
+        android:layout_width="119dp"
+        android:layout_height="41dp"
+        android:text="Button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

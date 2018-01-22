@@ -4,22 +4,22 @@ package peem.michaelkim.padevomaterialmanagement;
  * Created by Michael Kim on 1/19/2018.
  */
 
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -83,7 +83,9 @@ public class testView extends AppCompatActivity {
 
         @Override
         public View getView(final int i, View view, ViewGroup viewGroup) {
-            view = getLayoutInflater().inflate(R.layout.test_view_listview, null);
+            view = getLayoutInflater().inflate(R.layout.listview_test_view, null);
+
+            String materialIDS = "", choiceIDS = "";
 
             ImageView monsterImage = (ImageView) view.findViewById(R.id.originalMonster);
             ImageView monsterChoice = (ImageView) view.findViewById(R.id.evoChoiceMonster);
@@ -95,13 +97,31 @@ public class testView extends AppCompatActivity {
             TextView monsterMaterials = (TextView) view.findViewById(R.id.monsterEvoMaterials);
 
             Picasso.with(getBaseContext()).load(monstersInBox.get(i).imageLink).fit().into(monsterImage);
-            //Picasso.with(getBaseContext()).load(monstersInBox.get(i).evoChoice).fit().into(monsterChoice);
+            Picasso.with(getBaseContext()).load(monstersInBox.get(i).evoChoice).fit().into(monsterChoice);
             monsterID.setText(monstersInBox.get(i).monsterID);
             monsterName.setText(monstersInBox.get(i).monsterName);
             monsterPriority.setText(monstersInBox.get(i).priority);
             monsterElement.setText(monstersInBox.get(i).monsterElement);
-            monsterEvoChoices.setText(monstersInBox.get(i).evoChoices);
-            monsterMaterials.setText(monstersInBox.get(i).evoMats);
+
+            try {
+                JSONObject evoChoiceJSON = new JSONObject(monstersInBox.get(i).evoChoices);
+                JSONArray evoChoiceList = evoChoiceJSON.optJSONArray("evoChoices");
+                for (int evoCount = 0; evoCount < evoChoiceList.length(); evoCount++){
+                    choiceIDS = choiceIDS + " " + evoChoiceList.optString(evoCount);
+                }
+
+                JSONObject evoMatJSON = new JSONObject(monstersInBox.get(i).evoMats);
+                JSONArray evoMatList = evoMatJSON.optJSONArray("evoMatJSON");
+                for (int evoCount = 0; evoCount < evoMatList.length(); evoCount++){
+                    materialIDS = materialIDS + " " + evoMatList.optString(evoCount);
+                }
+            }
+            catch (Exception e){
+                Log.e("Reading Error", "Failed to Read EVO JSON");
+            }
+
+            monsterEvoChoices.setText(choiceIDS);
+            monsterMaterials.setText(materialIDS);
 
             return view;
         }

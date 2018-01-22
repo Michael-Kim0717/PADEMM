@@ -1,5 +1,6 @@
 package peem.michaelkim.padevomaterialmanagement;
 
+import android.util.Log;
 import android.widget.ArrayAdapter;
 
 import java.util.ArrayList;
@@ -45,9 +46,12 @@ public class monsterBase implements Comparable<monsterBase> {
 
     @Override
     public int compareTo(monsterBase monster){
-        int compareElement = findElement(((monsterBase) monster).monsterElement);
+        int compareElement = findElement(((monsterBase) monster).monsterElement) * 10 - Integer.parseInt(((monsterBase) monster).priority);
+        Log.e("comparing " + monster.monsterName, Integer.toString(compareElement));
 
-        return findElement(this.monsterElement) - compareElement;
+        int comparingTo = findElement(this.monsterElement) * 10 - Integer.parseInt(this.priority);
+        Log.e("comparingTo " + this.monsterName, Integer.toString(comparingTo));
+        return comparingTo - compareElement;
     }
 
     private int findElement(String element) {

@@ -48,6 +48,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
     ArrayList<String> listOfChoices = new ArrayList<>();
     ArrayList<evoChoice> evoChoices = new ArrayList<>();
     ArrayList<String> listOfChoiceLinks = new ArrayList<>();
+    ArrayList<String> listOfMaterialIDS = new ArrayList<>();
     boolean eC1 = false, eC2 = false, eC3 = false, eC4 = false, eC5 = false, eC6 = false;
 
     // Database declarations.
@@ -91,55 +92,40 @@ public class monsterDetailsScreen extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter(getBaseContext(), android.R.layout.simple_spinner_dropdown_item, priorities);
         prioritySpinner.setAdapter(arrayAdapter);
         String priority = getIntent().getStringExtra("Priority");
-        if (priority.equals("0")){
-            prioritySpinner.setSelection(0);
-        }
-        else{
-            int position = arrayAdapter.getPosition(priority);
-            prioritySpinner.setSelection(position);
-        }
+        int position = arrayAdapter.getPosition(priority);
+        prioritySpinner.setSelection(position);
 
-        // Populate the list of evolution choices with the ID's of evolutions that the clicked monster can evolve into.
-        // Populates an array with the list of ID's required to evolve the monster.
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 String monsterID = getIntent().getStringExtra("ID");
-                try{
+                try {
+                    // Populate the list of evolution choices with the ID's of evolutions that the clicked monster can evolve into.
+                    // Populates an array with the list of ID's required to evolve the monster.
                     JSONObject jsonObject = new JSONObject(JSON_EVOS);
                     JSONArray jsonArray = jsonObject.getJSONArray(monsterID);
                     int jsonCount = 0;
 
-                    while (jsonCount < jsonArray.length()){
+                    while (jsonCount < jsonArray.length()) {
                         JSONObject JO = jsonArray.getJSONObject(jsonCount);
 
                         // Populates the array.
                         ArrayList<String> ids = prepareString(JO.getString("materials"));
 
                         // Enters in a value of the evolution's id and its materials.
-                        evoChoices.add(new evoChoice(JO.getString("evolves_to"), ids));
+                        evoChoices.add(new evoChoice(JO.getString("evolves_to"), ids, new ArrayList<String>()));
 
                         listOfChoices.add(JO.getString("evolves_to"));
 
                         jsonCount++;
                     }
 
-                }
-                catch (JSONException e){
-                    e.printStackTrace();
-                }
-            }
-        },4000);
+                    // Using the previously populated array of ID's, we grab the images from the monster JSON.
+                    // Populate the evolution choice images on the bottom with the images we grabbed.
 
-        // Using the previously populated array of ID's, we grab the images from the monster JSON.
-        // Populate the evolution choice images on the bottom with the images we grabbed.
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run(){
-                try {
                     // Grab every single monster in the JSON array.
                     jsonArray = new JSONArray(JSON_MONSTERS);
-                    int jsonCount = 0;
+                    jsonCount = 0;
 
                     while (jsonCount < jsonArray.length()) {
                         JSONObject JO = jsonArray.getJSONObject(jsonCount);
@@ -152,7 +138,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (evoChoices.get(i).evoMaterials.contains(JO.getString("id"))){
                                 for (int j = 0; j < evoChoices.get(i).evoMaterials.size(); j++) {
                                     if (evoChoices.get(i).evoMaterials.get(j).equals(JO.getString("id"))) {
-                                        evoChoices.get(i).evoMaterials.set(j, "https://www.padherder.com" + JO.getString("image60_href"));
+                                        evoChoices.get(i).evoMaterialsLinks.add("https://www.padherder.com" + JO.getString("image60_href"));
                                     }
                                 }
                             }
@@ -167,16 +153,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (getIntent().getStringExtra("EvoChoice").equals(listOfChoiceLinks.get(i))) {
                                 eC1 = true;
                                 evoChoice1.setAlpha((float) 1);
-                                evoMat1.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(0)).into(evoMat1);
-                                evoMat2.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(1)).into(evoMat2);
-                                evoMat3.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(2)).into(evoMat3);
-                                evoMat4.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(3)).into(evoMat4);
-                                evoMat5.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(4)).into(evoMat5);
+                                showMaterials(0);
                             }
                             else{
                                 evoChoice1.setAlpha((float) 0.6);
@@ -187,16 +164,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (getIntent().getStringExtra("EvoChoice").equals(listOfChoiceLinks.get(i))) {
                                 eC2 = true;
                                 evoChoice2.setAlpha((float) 1);
-                                evoMat1.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(0)).into(evoMat1);
-                                evoMat2.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(1)).into(evoMat2);
-                                evoMat3.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(2)).into(evoMat3);
-                                evoMat4.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(3)).into(evoMat4);
-                                evoMat5.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(4)).into(evoMat5);
+                                showMaterials(1);
                             }
                             else{
                                 evoChoice2.setAlpha((float) 0.6);
@@ -207,16 +175,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (getIntent().getStringExtra("EvoChoice").equals(listOfChoiceLinks.get(i))) {
                                 eC3 = true;
                                 evoChoice3.setAlpha((float) 1);
-                                evoMat1.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(0)).into(evoMat1);
-                                evoMat2.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(1)).into(evoMat2);
-                                evoMat3.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(2)).into(evoMat3);
-                                evoMat4.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(3)).into(evoMat4);
-                                evoMat5.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(4)).into(evoMat5);
+                                showMaterials(2);
                             }
                             else{
                                 evoChoice3.setAlpha((float) 0.6);
@@ -227,16 +186,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (getIntent().getStringExtra("EvoChoice").equals(listOfChoiceLinks.get(i))) {
                                 eC4 = true;
                                 evoChoice4.setAlpha((float) 1);
-                                evoMat1.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(0)).into(evoMat1);
-                                evoMat2.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(1)).into(evoMat2);
-                                evoMat3.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(2)).into(evoMat3);
-                                evoMat4.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(3)).into(evoMat4);
-                                evoMat5.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(4)).into(evoMat5);
+                                showMaterials(3);
                             }
                             else{
                                 evoChoice4.setAlpha((float) 0.6);
@@ -247,16 +197,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (getIntent().getStringExtra("EvoChoice").equals(listOfChoiceLinks.get(i))) {
                                 eC5 = true;
                                 evoChoice5.setAlpha((float) 1);
-                                evoMat1.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(0)).into(evoMat1);
-                                evoMat2.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(1)).into(evoMat2);
-                                evoMat3.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(2)).into(evoMat3);
-                                evoMat4.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(3)).into(evoMat4);
-                                evoMat5.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(4)).into(evoMat5);
+                                showMaterials(4);
                             }
                             else{
                                 evoChoice5.setAlpha((float) 0.6);
@@ -267,23 +208,16 @@ public class monsterDetailsScreen extends AppCompatActivity {
                             if (getIntent().getStringExtra("EvoChoice").equals(listOfChoiceLinks.get(i))) {
                                 eC6 = true;
                                 evoChoice6.setAlpha((float) 1);
-                                evoMat1.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(0)).into(evoMat1);
-                                evoMat2.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(1)).into(evoMat2);
-                                evoMat3.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(2)).into(evoMat3);
-                                evoMat4.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(3)).into(evoMat4);
-                                evoMat5.setAlpha((float) 1);
-                                Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(4)).into(evoMat5);
+                                showMaterials(5);
                             }
                             else{
                                 evoChoice6.setAlpha((float) 0.6);
                             }
                         }
                     }
-                } catch (JSONException e) {
+
+                }
+                catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
@@ -298,16 +232,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 eC1 = true;
                 evoChoice1.setAlpha((float) 1);
                 if (evoChoices.size() >= 1) {
-                    evoMat1.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(0)).into(evoMat1);
-                    evoMat2.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(1)).into(evoMat2);
-                    evoMat3.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(2)).into(evoMat3);
-                    evoMat4.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(3)).into(evoMat4);
-                    evoMat5.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(0).evoMaterials.get(4)).into(evoMat5);
+                    showMaterials(0);
                 }
             }
         });
@@ -321,16 +246,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 eC2 = true;
                 evoChoice2.setAlpha((float) 1);
                 if (evoChoices.size() >= 2) {
-                    evoMat1.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(0)).into(evoMat1);
-                    evoMat2.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(1)).into(evoMat2);
-                    evoMat3.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(2)).into(evoMat3);
-                    evoMat4.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(3)).into(evoMat4);
-                    evoMat5.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(1).evoMaterials.get(4)).into(evoMat5);
+                    showMaterials(1);
                 }
             }
         });
@@ -344,16 +260,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 eC3 = true;
                 evoChoice3.setAlpha((float) 1);
                 if (evoChoices.size() >= 3) {
-                    evoMat1.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(0)).into(evoMat1);
-                    evoMat2.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(1)).into(evoMat2);
-                    evoMat3.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(2)).into(evoMat3);
-                    evoMat4.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(3)).into(evoMat4);
-                    evoMat5.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(2).evoMaterials.get(4)).into(evoMat5);
+                    showMaterials(2);
                 }
             }
         });
@@ -367,16 +274,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 eC4 = true;
                 evoChoice4.setAlpha((float) 1);
                 if (evoChoices.size() >= 4) {
-                    evoMat1.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(0)).into(evoMat1);
-                    evoMat2.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(1)).into(evoMat2);
-                    evoMat3.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(2)).into(evoMat3);
-                    evoMat4.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(3)).into(evoMat4);
-                    evoMat5.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(3).evoMaterials.get(4)).into(evoMat5);
+                    showMaterials(3);
                 }
             }
         });
@@ -390,16 +288,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 eC5 = true;
                 evoChoice5.setAlpha((float) 1);
                 if (evoChoices.size() >= 5) {
-                    evoMat1.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(0)).into(evoMat1);
-                    evoMat2.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(1)).into(evoMat2);
-                    evoMat3.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(2)).into(evoMat3);
-                    evoMat4.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(3)).into(evoMat4);
-                    evoMat5.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(4).evoMaterials.get(4)).into(evoMat5);
+                    showMaterials(4);
                 }
             }
         });
@@ -413,16 +302,7 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 eC6 = true;
                 evoChoice6.setAlpha((float) 1);
                 if (evoChoices.size() >= 6) {
-                    evoMat1.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(0)).into(evoMat1);
-                    evoMat2.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(1)).into(evoMat2);
-                    evoMat3.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(2)).into(evoMat3);
-                    evoMat4.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(3)).into(evoMat4);
-                    evoMat5.setAlpha((float) 1);
-                    Picasso.with(getApplicationContext()).load(evoChoices.get(5).evoMaterials.get(4)).into(evoMat5);
+                    showMaterials(5);
                 }
             }
         });
@@ -434,25 +314,75 @@ public class monsterDetailsScreen extends AppCompatActivity {
                 monsterBoxDBHelper = new monsterBoxDBHelper(getApplicationContext());
                 sqLiteDatabase = monsterBoxDBHelper.getWritableDatabase();
                 String evoChoice = "?";
-                if (eC1){
-                    evoChoice = listOfChoiceLinks.get(0);
+                String evoMaterialList = "", evoChoiceList = "";
+                try {
+                    if (eC1) {
+                        evoChoice = listOfChoiceLinks.get(0);
+
+                        // Grabs the Evo Material and Choice Arraylist and converts them to Strings via JSON to save into the SQLiteDatabase.
+                        JSONObject EvoMatJSON = new JSONObject();
+                        EvoMatJSON.put("evoMatJSON", new JSONArray(evoChoices.get(0).evoMaterials));
+                        evoMaterialList = EvoMatJSON.toString();
+                    }
+                    else if (eC2) {
+                        evoChoice = listOfChoiceLinks.get(1);
+
+                        JSONObject EvoMatJSON = new JSONObject();
+                        EvoMatJSON.put("evoMatJSON", new JSONArray(evoChoices.get(1).evoMaterials));
+                        evoMaterialList = EvoMatJSON.toString();
+                    }
+                    else if (eC3) {
+                        evoChoice = listOfChoiceLinks.get(2);
+
+                        JSONObject EvoMatJSON = new JSONObject();
+                        EvoMatJSON.put("evoMatJSON", new JSONArray(evoChoices.get(2).evoMaterials));
+                        evoMaterialList = EvoMatJSON.toString();
+                    }
+                    else if (eC4) {
+                        evoChoice = listOfChoiceLinks.get(3);
+
+                        JSONObject EvoMatJSON = new JSONObject();
+                        EvoMatJSON.put("evoMatJSON", new JSONArray(evoChoices.get(3).evoMaterials));
+                        evoMaterialList = EvoMatJSON.toString();
+                    }
+                    else if (eC5) {
+                        evoChoice = listOfChoiceLinks.get(4);
+
+                        JSONObject EvoMatJSON = new JSONObject();
+                        EvoMatJSON.put("evoMatJSON", new JSONArray(evoChoices.get(4).evoMaterials));
+                        evoMaterialList = EvoMatJSON.toString();
+                    }
+                    else if (eC6) {
+                        evoChoice = listOfChoiceLinks.get(5);
+
+                        JSONObject EvoMatJSON = new JSONObject();
+                        EvoMatJSON.put("evoMatJSON", new JSONArray(evoChoices.get(5).evoMaterials));
+                        evoMaterialList = EvoMatJSON.toString();
+                    }
                 }
-                else if (eC2){
-                    evoChoice = listOfChoiceLinks.get(1);
+                catch (Exception e) {
+                    Log.e("invalid evoMatException", "Evo Material JSON exception");
                 }
-                else if (eC3){
-                    evoChoice = listOfChoiceLinks.get(2);
+
+
+                try {
+                    JSONObject EvoChoices = new JSONObject();
+                    EvoChoices.put("evoChoices", new JSONArray(listOfChoices));
+                    evoChoiceList = EvoChoices.toString();
                 }
-                else if (eC4){
-                    evoChoice = listOfChoiceLinks.get(3);
+                catch (Exception e){
+                    Log.e("invalid choiceException", "Evo Choice JSON exception");
                 }
-                else if (eC5){
-                    evoChoice = listOfChoiceLinks.get(4);
-                }
-                else if (eC6){
-                    evoChoice = listOfChoiceLinks.get(5);
-                }
-                int count = monsterBoxDBHelper.updateMonster(getIntent().getStringExtra("Link"), getIntent().getStringExtra("Name"), getIntent().getStringExtra("ID"), evoChoice, prioritySpinner.getSelectedItem().toString().trim(), "", "", "", sqLiteDatabase);
+
+                int count = monsterBoxDBHelper.updateMonster(getIntent().getStringExtra("Link"),
+                        getIntent().getStringExtra("Name"),
+                        getIntent().getStringExtra("ID"),
+                        evoChoice,
+                        prioritySpinner.getSelectedItem().toString().trim(),
+                        getIntent().getStringExtra("Element"),
+                        evoChoiceList,
+                        evoMaterialList,
+                        sqLiteDatabase);
                 Toast.makeText(getApplicationContext(), count + " contact updated.", Toast.LENGTH_LONG).show();
                 finish();
             }
@@ -632,6 +562,19 @@ public class monsterDetailsScreen extends AppCompatActivity {
         evoChoice4.setAlpha((float) 0);
         evoChoice5.setAlpha((float) 0);
         evoChoice6.setAlpha((float) 0);
+    }
+
+    private void showMaterials(int evoChoice) {
+        evoMat1.setAlpha((float) 1);
+        Picasso.with(getApplicationContext()).load(evoChoices.get(evoChoice).evoMaterialsLinks.get(0)).into(evoMat1);
+        evoMat2.setAlpha((float) 1);
+        Picasso.with(getApplicationContext()).load(evoChoices.get(evoChoice).evoMaterialsLinks.get(1)).into(evoMat2);
+        evoMat3.setAlpha((float) 1);
+        Picasso.with(getApplicationContext()).load(evoChoices.get(evoChoice).evoMaterialsLinks.get(2)).into(evoMat3);
+        evoMat4.setAlpha((float) 1);
+        Picasso.with(getApplicationContext()).load(evoChoices.get(evoChoice).evoMaterialsLinks.get(3)).into(evoMat4);
+        evoMat5.setAlpha((float) 1);
+        Picasso.with(getApplicationContext()).load(evoChoices.get(evoChoice).evoMaterialsLinks.get(4)).into(evoMat5);
     }
 
 }

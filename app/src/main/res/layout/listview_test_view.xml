@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/originalMonster"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="19dp"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
+    <ImageView
+        android:id="@+id/evoChoiceMonster"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignLeft="@+id/originalMonster"
+        android:layout_alignStart="@+id/originalMonster"
+        android:layout_below="@+id/originalMonster"
+        android:layout_marginTop="32dp"
+        app:srcCompat="@android:drawable/btn_dialog" />
+
+    <TextView
+        android:id="@+id/monsterName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/originalMonster"
+        android:layout_marginLeft="27dp"
+        android:layout_marginStart="27dp"
+        android:layout_toRightOf="@+id/originalMonster"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/monsterID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/monsterName"
+        android:layout_alignStart="@+id/monsterName"
+        android:layout_below="@+id/monsterName"
+        android:layout_marginTop="13dp"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/monsterPriority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        android:layout_alignBaseline="@+id/monsterID"
+        android:layout_alignBottom="@+id/monsterID"
+        android:layout_toLeftOf="@+id/monsterElement"
+        android:layout_toStartOf="@+id/monsterElement"
+        android:layout_marginRight="12dp"
+        android:layout_marginEnd="12dp" />
+
+    <TextView
+        android:id="@+id/monsterElement"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/monsterPriority"
+        android:layout_alignEnd="@+id/monsterName"
+        android:layout_alignRight="@+id/monsterName"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/monsterEvoChoices"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:text="TextView"
+        android:layout_below="@+id/monsterID"
+        android:layout_alignLeft="@+id/monsterID"
+        android:layout_alignStart="@+id/monsterID"
+        android:layout_marginTop="18dp" />
+
+    <TextView
+        android:id="@+id/monsterEvoMaterials"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_alignLeft="@+id/monsterEvoChoices"
+        android:layout_alignStart="@+id/monsterEvoChoices"
+        android:layout_below="@+id/monsterEvoChoices"
+        android:layout_marginTop="11dp"
+        android:text="TextView" />
+</RelativeLayout>

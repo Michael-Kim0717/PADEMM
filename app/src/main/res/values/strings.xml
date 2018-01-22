@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PAD Evo Material Management</string>
+    <string name="textview">TextView</string>
 </resources>

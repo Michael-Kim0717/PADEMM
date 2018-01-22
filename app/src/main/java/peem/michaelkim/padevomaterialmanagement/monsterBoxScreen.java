@@ -98,6 +98,9 @@ public class monsterBoxScreen extends AppCompatActivity{
                 changeEvoOptions.putExtra("EvoChoice", monstersInBox.get(i).evoChoice);
                 changeEvoOptions.putExtra("Priority", monstersInBox.get(i).priority);
                 changeEvoOptions.putExtra("ID", monstersInBox.get(i).monsterID);
+                changeEvoOptions.putExtra("Element", monstersInBox.get(i).monsterElement);
+                changeEvoOptions.putExtra("EvoChoices", monstersInBox.get(i).evoChoices);
+                changeEvoOptions.putExtra("EvoMaterials", monstersInBox.get(i).evoMats);
                 startActivity(changeEvoOptions);
             }
         });

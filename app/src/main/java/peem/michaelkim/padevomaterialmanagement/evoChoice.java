@@ -1,5 +1,6 @@
 package peem.michaelkim.padevomaterialmanagement;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -10,10 +11,12 @@ public class evoChoice {
 
     String evoMonster;
     ArrayList<String> evoMaterials;
+    ArrayList<String> evoMaterialsLinks;
 
-    public evoChoice(String evoMonster, ArrayList<String> evoMaterials) {
+    public evoChoice(String evoMonster, ArrayList<String> evoMaterials, ArrayList<String> evoMaterialsLinks) {
         this.evoMonster = evoMonster;
         this.evoMaterials = evoMaterials;
+        this.evoMaterialsLinks = evoMaterialsLinks;
     }
 
 }
