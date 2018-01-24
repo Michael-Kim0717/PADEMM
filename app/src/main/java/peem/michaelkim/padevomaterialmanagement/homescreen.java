@@ -45,6 +45,7 @@ public class homescreen extends AppCompatActivity {
     // Database declarations.
     SQLiteDatabase sqLiteDatabase;
     monsterBoxDBHelper monsterBoxDBHelper;
+    myMaterialsDBHelper myMaterialsDBHelper;
     Cursor cursor;
     ArrayList<material> materials = new ArrayList<>();
 
@@ -67,6 +68,14 @@ public class homescreen extends AppCompatActivity {
                 + monsterBase.monsterBaseDB.EVO_MATERIALS + " TEXT);");
         sqLiteDatabase.close();
 
+        // For the initial launch, create the table for the materials.
+        myMaterialsDBHelper = new myMaterialsDBHelper(getApplicationContext());
+        sqLiteDatabase = myMaterialsDBHelper.getReadableDatabase();
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS " + material.materialDB.MATERIAL_TABLE + "("
+                + material.materialDB.MATERIAL_ID + " TEXT,"
+                + material.materialDB.MATERIAL_COUNT + " TEXT);");
+        sqLiteDatabase.close();
+
         // Grab monster list.
         new getMonsters().execute();
 
@@ -85,39 +94,22 @@ public class homescreen extends AppCompatActivity {
         cursor = monsterBoxDBHelper.getListOfMonsters(sqLiteDatabase);
         if (cursor.moveToFirst()){
             do {
-                /*
-                String element, link, id, name, evoChoice, evoChoices, evoMats, priority;
-                link = cursor.getString(0);
-                Log.e("link", link);
-                id = cursor.getString(1);
-                Log.e("id", id);
-                name = cursor.getString(2);
-                Log.e("name", name);
-                evoChoice = cursor.getString(3);
-                Log.e("evoChoice", evoChoice);
-                priority = cursor.getString(4);
-                Log.e("priority", priority);
-                element = cursor.getString(5);
-                Log.e("element", element);
-                evoChoices = cursor.getString(6);
-                */
+                // Retrieve the ID's of all the materials.
                 String evoMats = cursor.getString(7);
-
-                /*monsterBase currentMonster = new monsterBase(link, id, name, evoChoice, priority, element, evoChoices, evoMats);
-                monstersInBox.add(currentMonster);
-                */
                 try {
                     if (!evoMats.isEmpty()) {
                         JSONObject materialsObject = new JSONObject(evoMats);
                         JSONArray materialArray = materialsObject.optJSONArray("evoMatJSON");
+                        // If the ID already exists, increment the count.
+                        // Otherwise, add it as a new material.
                         for (int i = 0; i < materialArray.length(); i++) {
                             String materialID = materialArray.optString(i);
                             int materialIndex = indexOfID(materials, materialID);
                             if (materialIndex > -1){
-                                materials.set(materialIndex, new material(materialID, materials.get(materialIndex).count + 1));
+                                materials.set(materialIndex, new material(materialID, "http://puzzledragonx.com/en/img/thumbnail/0.png", 0, materials.get(materialIndex).needed + 1));
                             }
                             else {
-                                materials.add(new material(materialID, 1));
+                                materials.add(new material(materialID, "http://puzzledragonx.com/en/img/thumbnail/0.png", 0, 1));
                             }
                         }
                     }
@@ -128,12 +120,33 @@ public class homescreen extends AppCompatActivity {
             }
             while (cursor.moveToNext());
         }
+        sqLiteDatabase.close();
+
+        // Fill in the information for the amount of materials you own.
+        sqLiteDatabase = myMaterialsDBHelper.getReadableDatabase();
+        cursor = myMaterialsDBHelper.getMaterials(sqLiteDatabase);
+        if (cursor.moveToFirst()){
+            do {
+                String id = cursor.getString(0);
+                Log.e("retrieved ID", id);
+                String materialOwned = cursor.getString(1);
+                Log.e("retrieved materialCount", materialOwned);
+
+                int indexOfID = indexOfID(materials, id);
+                if (indexOfID > -1) {
+                    materials.set(indexOfID, new material(id, materials.get(indexOfID).link, Integer.parseInt(materialOwned), materials.get(indexOfID).needed));
+                }
+            }
+            while (cursor.moveToNext());
+        }
+        sqLiteDatabase.close();
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
                     // Grab every single monster in the JSON array.
+                    // Set each link to its corresponding ID.
                     JSONArray jsonArray = new JSONArray(JSON_MONSTERS);
                     int jsonCount = 0;
 
@@ -142,7 +155,11 @@ public class homescreen extends AppCompatActivity {
 
                         int indexOfID = indexOfID(materials, JO.getString("id"));
                         if (indexOfID > -1){
-                            materials.set(indexOfID, new material("https://www.padherder.com" + JO.getString("image60_href"), materials.get(indexOfID).count));
+                            materials.set(indexOfID, new material(
+                                    materials.get(indexOfID).id,
+                                    "https://www.padherder.com" + JO.getString("image60_href"),
+                                    materials.get(indexOfID).owned,
+                                    materials.get(indexOfID).needed));
                         }
 
                         jsonCount++;
@@ -248,29 +265,42 @@ public class homescreen extends AppCompatActivity {
             Button subtractMaterial = (Button) view.findViewById(R.id.subtractMaterial);
 
             // Populate image view with material icon.
-            Picasso.with(getBaseContext()).load(materials.get(i).id).into(materialImage);
+            Picasso.with(getBaseContext()).load(materials.get(i).link).into(materialImage);
 
             // Populate text view with amount of materials you own / need.
-            final int currentlyOwned = 0;
-
-            materialCount.setText(Integer.toString(currentlyOwned) + " / " + Integer.toString(materials.get(i).count));
+            materialCount.setText(Integer.toString(materials.get(i).owned) + " / " + Integer.toString(materials.get(i).needed));
 
             // Upon clicking the add/subtract material button, set the amount of materials you own accordingly.
             addMaterial.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    materialCount.setText("155 / " + Integer.toString(materials.get(i).count));
+                    // If the ID does not already exist in the material database, add it.
+                    myMaterialsDBHelper = new myMaterialsDBHelper(getBaseContext());
+                    sqLiteDatabase = myMaterialsDBHelper.getWritableDatabase();
+                    myMaterialsDBHelper.addMaterial(materials.get(i).id, "0", sqLiteDatabase);
+
+                    // Increment the material amount in both the home screen and the database.
+                    myMaterialsDBHelper.updateCount(materials.get(i).id, Integer.toString(++ materials.get(i).owned), sqLiteDatabase);
+                    Log.e("Increment Value", Integer.toString(materials.get(i).owned));
+                    materialCount.setText(Integer.toString(materials.get(i).owned) + " / " + Integer.toString(materials.get(i).needed));
                 }
             });
 
             subtractMaterial.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (currentlyOwned == 0){
+                    myMaterialsDBHelper = new myMaterialsDBHelper(getBaseContext());
+                    sqLiteDatabase = myMaterialsDBHelper.getWritableDatabase();
+
+                    // If the user tries to subtract from 0, provide error message.
+                    if (materials.get(i).owned == 0){
                         Toast.makeText(getApplicationContext(), "You have 0 of this material.", Toast.LENGTH_SHORT).show();
                     }
+                    // Else, Decrement the material amount in both the home screen and the database.
                     else {
-                        materialCount.setText("155 / " + Integer.toString(materials.get(i).count));
+                        myMaterialsDBHelper.updateCount(materials.get(i).id, Integer.toString(-- materials.get(i).owned), sqLiteDatabase);
+                        Log.e("Decrement Value", Integer.toString(materials.get(i).owned));
+                        materialCount.setText(Integer.toString(materials.get(i).owned) + " / " + Integer.toString(materials.get(i).needed));
                     }
                 }
             });
